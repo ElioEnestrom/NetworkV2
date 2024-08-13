@@ -10,9 +10,10 @@ public class Player : NetworkBehaviour
     public InputAction inputMovement;
     private Vector2 _movement2D;
     private Vector2 _movement;
-    [SerializeField]private int speed;
+    [SerializeField] private int speed;
 
-    private NetworkVariable<Vector2> _onlineMovement = new NetworkVariable<Vector2>(writePerm: NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Vector2> _onlineMovement = new NetworkVariable<Vector2>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
+
     
     private void OnEnable()
     {
@@ -25,20 +26,23 @@ public class Player : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (IsLocalPlayer)
+        if (IsOwner)
         {
             _movement2D = inputMovement.ReadValue<Vector2 >();
+        
+            Vector2 newPosition = new Vector3(_onlineMovement.Value.x + _movement2D.x, _onlineMovement.Value.y + _movement2D.y, 0);
             
-            _onlineMovement.Value = new Vector3(_onlineMovement.Value.x + _movement2D.x * Time.deltaTime, _onlineMovement.Value.y + _movement2D.y * Time.deltaTime, 0);
-            
-            transform.position = (Vector3)_onlineMovement.Value * speed;
+            MoveServerRpc(newPosition);
+            print(newPosition);
         }
+        transform.position = (Vector3)_onlineMovement.Value * (speed * Time.deltaTime);
     }
 
-    private void HelloRPC(Vector2 data)
+    [ServerRpc]
+    private void MoveServerRpc(Vector2 newPosition)
     {
-        
+        _onlineMovement.Value = newPosition;
     }
 }
