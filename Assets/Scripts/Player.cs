@@ -14,35 +14,36 @@ public class Player : NetworkBehaviour
 
     private NetworkVariable<Vector2> _onlineMovement = new NetworkVariable<Vector2>(readPerm: NetworkVariableReadPermission.Everyone, writePerm: NetworkVariableWritePermission.Server);
 
-    
-    private void OnEnable()
-    {
-        inputMovement.Enable();
-    }
+  
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (IsLocalPlayer)
+        {
+            inputMovement.Enable();
+        }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (IsOwner)
+        if (IsLocalPlayer)
         {
+            // if (Input.GetKeyDown(KeyCode.K))
+            // {
+            //     MoveServerRpc(Vector3.left);
+            // }
             _movement2D = inputMovement.ReadValue<Vector2 >();
         
-            Vector2 newPosition = new Vector3(_onlineMovement.Value.x + _movement2D.x, _onlineMovement.Value.y + _movement2D.y, 0);
+            Vector2 newPosition = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
             
             MoveServerRpc(newPosition);
-            print(newPosition);
         }
-        transform.position = (Vector3)_onlineMovement.Value * (speed * Time.deltaTime);
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server)]
     private void MoveServerRpc(Vector2 newPosition)
     {
-        _onlineMovement.Value = newPosition;
+        transform.position += (Vector3)newPosition * Time.deltaTime;
     }
 }
