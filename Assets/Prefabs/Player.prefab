@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8168374585029450440}
   - component: {fileID: 3427843904400206865}
   - component: {fileID: 7316501497789329521}
+  - component: {fileID: 1138370931677953748}
   - component: {fileID: 4954387413973857963}
   m_Layer: 0
   m_Name: Player
@@ -136,7 +137,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4009577795836720781}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cc03bbb0881b014991f4f5cd0a0efe4, type: 3}
   m_Name: 
@@ -190,6 +191,86 @@ MonoBehaviour:
       m_Action: Input Movement
       m_Flags: 8
     m_Flags: 0
+  speed: 10
+--- !u!114 &1138370931677953748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009577795836720781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a87e148d5f7e564a8824e28b517626d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 3c100518-581d-4c16-a123-060f75ec3e72
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 2D Vector
+      m_Id: f9363345-14d4-4659-aed9-31faf3427885
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 85585fee-7274-4c0e-86f5-d04673d4141b
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    - m_Name: down
+      m_Id: 15e0e983-b70f-46a2-b412-2b4042304f05
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    - m_Name: left
+      m_Id: dd667bc9-1347-4c25-aa7a-754c60a516b7
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    - m_Name: right
+      m_Id: 2150fa13-05d9-41bf-a572-b5382a546ef2
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move
+      m_Flags: 8
+    m_Flags: 0
+  shootBullet:
+    m_Name: Shoot Bullet
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2269b0cd-b49b-4a54-b5c3-01fa6a4ba273
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 4c9c7ee9-b675-497c-bed0-f8b71fa4728d
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Shoot Bullet
+      m_Flags: 0
+    m_Flags: 0
+  bullet: {fileID: 4065750011680078746, guid: e5d036a1119ed4f41958e77bd7240b21, type: 3}
   speed: 10
 --- !u!114 &4954387413973857963
 MonoBehaviour:
