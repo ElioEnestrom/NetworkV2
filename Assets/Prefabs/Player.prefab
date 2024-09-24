@@ -270,7 +270,7 @@ MonoBehaviour:
       m_Action: Shoot Bullet
       m_Flags: 0
     m_Flags: 0
-  bullet: {fileID: 4065750011680078746, guid: e5d036a1119ed4f41958e77bd7240b21, type: 3}
+  boolet: {fileID: 4065750011680078746, guid: e5d036a1119ed4f41958e77bd7240b21, type: 3}
   speed: 10
 --- !u!114 &4954387413973857963
 MonoBehaviour:
