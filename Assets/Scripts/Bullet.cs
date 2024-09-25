@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -8,36 +9,63 @@ public class Bullet : NetworkBehaviour
 {
     [SerializeField]
     private float booletSpeed = 20f;
+    private int i = 0;
 
     private Camera mainCamera;
     private Vector3 mousePosition;
+    private Rigidbody rb;
     
     
     public override void OnNetworkSpawn()
     {
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        
         base.OnNetworkSpawn();
         
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 mouseDirection = mousePosition - transform.position;
-        //Vector3 rotation = transform.position - mousePosition;
-        
-        Rigidbody rb = GetComponent<Rigidbody>();
-        
-        if (rb.isKinematic)
+        mainCamera = Camera.main;
+        rb = GetComponent<Rigidbody>();
+
+        if (IsOwner)
         {
-            rb.isKinematic = false;
+            if (mainCamera != null) mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mouseDirection = mousePosition - transform.position;
+            //Vector3 rotation = transform.position - mousePosition;
+            
+            
+            
+            
+            //rb.velocity = new Vector3(mouseDirection.x, mouseDirection.y).normalized * booletSpeed;
+            FireBulletServerRpc(mouseDirection);
         }
         
-        
-        rb.velocity = new Vector3(mouseDirection.x, mouseDirection.y).normalized * booletSpeed;
     }
     
     
-    //[Rpc(SendTo.Server)]
-    //private void MoveBulletRpc(Vector2 newInput)
-    //{
-    //    
-    //}
+    [ServerRpc]
+    private void FireBulletServerRpc(Vector3 direction)
+    {
+            if (rb.isKinematic)
+            {
+                rb.isKinematic = false;
+            }
+            rb.velocity = new Vector3(direction.x, direction.y).normalized * booletSpeed;
+
+            FireBulletClientRpc(rb.velocity);
+    }
+
+    
+    
+    [ClientRpc]
+    private void FireBulletClientRpc(Vector3 velocity)
+    {
+        if (!IsServer)
+        {
+            if (rb.isKinematic)
+            {
+                rb.isKinematic = false;
+            }
+            rb.velocity = velocity;
+        }
+    }
 
 }   

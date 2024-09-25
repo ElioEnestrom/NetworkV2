@@ -47,6 +47,30 @@ public class NewPlayer : NetworkBehaviour
             }
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Projectile"))
+        {
+            var networkObject = other.gameObject.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                DestroyPlayerServerRpc(networkObject.NetworkObjectId);
+            }   
+        }
+    
+
+    }
+    
+    [Rpc(SendTo.Server)]
+    private void DestroyPlayerServerRpc(ulong networkObjectId)
+    {
+        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkObjectId];
+        if (networkObject != null)
+        {
+            Debug.Log("What");
+            Destroy(networkObject.gameObject);
+        }
+    }
 
     [Rpc(SendTo.Server)]
     private void MoveServerRpc(Vector2 newInput)
