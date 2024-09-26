@@ -47,30 +47,7 @@ public class NewPlayer : NetworkBehaviour
             }
         }
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Projectile"))
-        {
-            var networkObject = other.gameObject.GetComponent<NetworkObject>();
-            if (networkObject != null)
-            {
-                DestroyPlayerServerRpc(networkObject.NetworkObjectId);
-            }   
-        }
     
-
-    }
-    
-    [Rpc(SendTo.Server)]
-    private void DestroyPlayerServerRpc(ulong networkObjectId)
-    {
-        NetworkObject networkObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[networkObjectId];
-        if (networkObject != null)
-        {
-            Debug.Log("What");
-            Destroy(networkObject.gameObject);
-        }
-    }
 
     [Rpc(SendTo.Server)]
     private void MoveServerRpc(Vector2 newInput)
@@ -82,10 +59,8 @@ public class NewPlayer : NetworkBehaviour
     [ServerRpc]
     private void ShootBulletServerRpc()
     {
-        // Instantiate the bullet on the server
         GameObject bullet = Instantiate(boolet, transform.position + transform.forward, Quaternion.identity);
 
-        // Spawn the bullet over the network so it appears on all clients
         bullet.GetComponent<NetworkObject>().Spawn();
     }
 }
