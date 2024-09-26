@@ -11,7 +11,7 @@ public class Bullet : NetworkBehaviour
     private float booletSpeed = 20f;
 
     private Camera mainCamera;
-    private Vector3 mousePosition;
+    private Vector3 direction;
     private Rigidbody rb;
     
     public override void OnNetworkSpawn()
@@ -35,7 +35,7 @@ public class Bullet : NetworkBehaviour
     [ServerRpc]
     private void FireBulletServerRpc()
     {
-        Vector3 direction = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z) - transform.position;
+        MoveBulletServerRpc();
         
         if (rb.isKinematic)
         {
@@ -44,20 +44,25 @@ public class Bullet : NetworkBehaviour
         
         rb.velocity = new Vector3(direction.x, direction.y).normalized * booletSpeed;
 
-        // Optionally, you could also sync the bullet velocity with clients
-        FireBulletClientRpc(rb.velocity);
+         //FireBulletClientRpc(rb.velocity);
     }
     
-    [ClientRpc]
-    private void FireBulletClientRpc(Vector3 velocity)
+    [Rpc(SendTo.Server)]
+    private void MoveBulletServerRpc()
     {
-        if (!IsServer)
-        {
-            if (rb.isKinematic)
-            {
-                rb.isKinematic = false;
-            }
-            rb.velocity = velocity;
-        }
+        direction = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z) - transform.position;
     }
+    
+    //[ClientRpc]
+    //private void FireBulletClientRpc(Vector3 velocity)
+    //{
+    //    if (!IsServer)
+    //    {
+    //        if (rb.isKinematic)
+    //        {
+    //            rb.isKinematic = false;
+    //        }
+    //        rb.velocity = velocity;
+    //    }
+    //}
 }
